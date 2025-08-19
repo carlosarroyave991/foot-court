@@ -1,0 +1,97 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.sonarqube' version '4.4.1.3373'
+	id 'jacoco'
+}
+
+group = 'com.foorcourt'
+version = '0.0.1-SNAPSHOT'
+description = 'proyecto enfocado en los pedidos de la plazoleta de comidas'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	mapstructVersion = "1.5.5.Final"
+	lombokVersion = "1.18.30"
+	lombokMapstructBindingVersion = "0.2.0"
+
+	set('springCloudVersion', "2025.0.0")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	developmentOnly "org.springframework.boot:spring-boot-devtools"
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// JWT con JJWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "users-food-court"
+		property "sonar.projectName", "Users Food Court"
+		property "sonar.host.url", "http://localhost:9000"
+		property "sonar.sources", "src/main/java"
+		property "sonar.tests", "src/test/java"
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+		property "sonar.exclusions", "**/infrastructure/configuration/**,**/infrastructure/documentation/**,**/UsersApplication.java"
+	}
+}
