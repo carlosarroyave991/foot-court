@@ -1,6 +1,6 @@
 package com.foorcourt.application.mapper;
 
-import com.foorcourt.application.dto.request.RestaurantRequest;
+import com.foorcourt.application.dto.request.restaurant.RestaurantRequest;
 import com.foorcourt.application.dto.response.restaurant.RestaurantResponse;
 import com.foorcourt.domain.model.RestaurantModel;
 import org.mapstruct.*;
@@ -11,7 +11,7 @@ import org.mapstruct.*;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface IRestaurantRequestMapper {
+public interface IRestaurantDtoMapper {
     
     @Mapping(target = "dishes", ignore = true)
     @Mapping(target = "orders", ignore = true)

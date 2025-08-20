@@ -1,6 +1,6 @@
 package com.foorcourt.infraestructure.input.rest;
 
-import com.foorcourt.application.dto.request.RestaurantRequest;
+import com.foorcourt.application.dto.request.restaurant.RestaurantRequest;
 import com.foorcourt.application.dto.response.restaurant.RestaurantResponse;
 import com.foorcourt.application.handler.IRestaurantHandler;
 import io.swagger.v3.oas.annotations.Operation;

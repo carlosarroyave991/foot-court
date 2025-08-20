@@ -1,4 +1,4 @@
-package com.foorcourt.application.dto.response.restaurant;
+package com.foorcourt.application.dto.response.dish;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RestaurantPageableResponse {
-    private List<RestaurantSimpleResponse> content;
+public class DishPageableResponse {
+    private List<DishSimpleResponse> content;
     private int page;
     private int size;
     private long total;

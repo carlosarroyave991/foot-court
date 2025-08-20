@@ -1,4 +1,4 @@
-package com.foorcourt.application.dto.request;
+package com.foorcourt.application.dto.request.restaurant;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;

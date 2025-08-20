@@ -1,9 +1,9 @@
 package com.foorcourt.application.handler.impl;
 
-import com.foorcourt.application.dto.request.RestaurantRequest;
+import com.foorcourt.application.dto.request.restaurant.RestaurantRequest;
 import com.foorcourt.application.dto.response.restaurant.RestaurantResponse;
 import com.foorcourt.application.handler.IRestaurantHandler;
-import com.foorcourt.application.mapper.IRestaurantRequestMapper;
+import com.foorcourt.application.mapper.IRestaurantDtoMapper;
 import com.foorcourt.domain.api.IRestaurantServicePort;
 import com.foorcourt.domain.model.RestaurantModel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RestaurantHandler implements IRestaurantHandler {
     
     private final IRestaurantServicePort restaurantServicePort;
-    private final IRestaurantRequestMapper restaurantRequestMapper;
+    private final IRestaurantDtoMapper restaurantRequestMapper;
     
     @Override
     public RestaurantResponse save(RestaurantRequest request) {

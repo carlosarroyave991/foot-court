@@ -10,4 +10,5 @@ public interface IRestaurantPersistencePort {
     void save(RestaurantModel model);
     Optional<RestaurantModel> findByNit(String nit);
     Page<RestaurantModel> findAll(Pageable pageable);
+    Optional<RestaurantModel> findById(Long id);
 }

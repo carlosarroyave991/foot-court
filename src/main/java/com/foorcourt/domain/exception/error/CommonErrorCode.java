@@ -27,6 +27,8 @@ public enum CommonErrorCode  implements ErrorCode{
     // Resource errors
     RESOURCE_NOT_FOUND("ERR_NOT_FOUND", "Resource not found", HttpStatus.NOT_FOUND.value(), ErrorCategory.RESOURCE),
     RESOURCE_ALREADY_EXISTS("ERR_DUPLICATE_RESOURCE", "Resource already exists", HttpStatus.CONFLICT.value(), ErrorCategory.RESOURCE),
+    RESTAURANT_NOT_FOUND("ERR_RESTAURANT_NOT_FOUND", "Restaurant not found", HttpStatus.NOT_FOUND.value(), ErrorCategory.RESOURCE),
+    CATEGORY_NOT_FOUND("ERR_CATEGORY_NOT_FOUND", "Category not found", HttpStatus.NOT_FOUND.value(), ErrorCategory.RESOURCE),
     USER_ALREADY_EXISTS("ERR_DUPLICATE_USER", "User already exists", HttpStatus.CONFLICT.value(), ErrorCategory.RESOURCE),
     ID_ROLE_NOT_FOUND("ERR_ID_ROLE_NOT_FOUND", "Role id not found", HttpStatus.NOT_FOUND.value(),ErrorCategory.BUSINESS),
     DNI_ALREADY_EXISTS("ERR_DUPLICATE_DNI", "DNI already exists", HttpStatus.CONFLICT.value(), ErrorCategory.RESOURCE),
