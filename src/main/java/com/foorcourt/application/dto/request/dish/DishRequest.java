@@ -29,6 +29,6 @@ public class DishRequest {
     private BigDecimal price;
     @NotNull(message = "The urlImage field cannot be empty.")
     private String urlImage;
-    @NotNull(message = "The active field cannot be empty.")
+    @Null
     private Boolean active;
 }

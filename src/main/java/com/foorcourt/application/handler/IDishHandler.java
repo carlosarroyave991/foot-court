@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface IDishHandler {
     DishResponse save(DishRequest request, Long restaurantId, Long categoryId);
-    DishResponse update(DishUpdateRequest request, Long restaurantId, Long categoryId);
+    DishResponse update(DishUpdateRequest request);
     DishResponse changeStatusDish(DishChangeStatusRequest request);
     Page<DishSimpleResponse> findAllDishesByRestaurantId(Pageable pageable, Long restaurantId, Long categoryId);
 }

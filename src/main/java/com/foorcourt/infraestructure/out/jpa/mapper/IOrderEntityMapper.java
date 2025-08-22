@@ -1,7 +1,7 @@
 package com.foorcourt.infraestructure.out.jpa.mapper;
 
-import com.foorcourt.domain.model.DishModel;
-import com.foorcourt.infraestructure.out.jpa.entity.DishEntity;
+import com.foorcourt.domain.model.OrderModel;
+import com.foorcourt.infraestructure.out.jpa.entity.OrderEntity;
 import org.mapstruct.*;
 
 @Mapper(
@@ -10,15 +10,13 @@ import org.mapstruct.*;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface IDishEntityMapper {
+public interface IOrderEntityMapper {
     
-    @Mapping(target = "category.dishes", ignore = true)
     @Mapping(target = "restaurant.dishes", ignore = true)
     @Mapping(target = "restaurant.orders", ignore = true)
     @Mapping(target = "ordersDishes", ignore = true)
-    DishEntity toEntity(DishModel model);
+    OrderEntity toEntity(OrderModel model);
 
-    @InheritInverseConfiguration
     @Mapping(target = "ordersDishes", ignore = true)
-    DishModel toModel(DishEntity entity);
+    OrderModel toModel(OrderEntity entity);
 }

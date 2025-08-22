@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,5 +34,11 @@ public class RestaurantHandler implements IRestaurantHandler {
     public Page<RestaurantResponse> getAll(Pageable pageable) {
         Page<RestaurantModel> models = restaurantServicePort.getAll(pageable);
         return models.map(restaurantRequestMapper::toResponse);
+    }
+
+    @Override
+    public Optional<RestaurantResponse> findById(Long id) {
+        Optional<RestaurantModel> restaurantModel = restaurantServicePort.findById(id);
+        return restaurantModel.map(restaurantRequestMapper::toResponse);
     }
 }

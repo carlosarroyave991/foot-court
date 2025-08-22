@@ -1,16 +1,16 @@
-package com.foorcourt.domain.model.simplemodel;
+package com.foorcourt.application.dto.response.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDishSimpleModel {
-    private Long id;
-    private Integer quantity;
+@Getter
+@Setter
+public class OrderDishResponse {
+    private Long dishId;
     private String dishName;
+    private Integer quantity;
 }

@@ -65,12 +65,26 @@ public class DishUseCase implements IDishServicePort {
         Optional<DishModel> existingDish = dishService.findById(model.getId());
         if (existingDish.isEmpty()) throw new NotFoundException(ID_NOT_FOUND);
 
-        dishValidationService.validateDishData(model);
+        DishModel dishToUpdate = existingDish.get();
         
-        // Mantener el estado activo original
-        model.setActive(existingDish.get().getActive());
+        // Actualizar solo los campos que vienen en el request
+        if (model.getName() != null) {
+            dishToUpdate.setName(model.getName());
+        }
+        if (model.getDescription() != null) {
+            dishToUpdate.setDescription(model.getDescription());
+        }
+        if (model.getPrice() != null) {
+            if (model.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new ValidationException(INVALID_INPUT);
+            }
+            dishToUpdate.setPrice(model.getPrice());
+        }
+        if (model.getUrlImage() != null) {
+            dishToUpdate.setUrlImage(model.getUrlImage());
+        }
         
-        return dishService.save(model);
+        return dishService.save(dishToUpdate);
     }
 
     @Override
@@ -87,7 +101,13 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
-    public Page<DishModel> findByRestaurantIdAndCategoryId(Pageable pageable, Long restaurantId, Long categoryId) {
+    public Optional<DishModel> findById(Long id) {
+        if (id == null) throw new ValidationException(INVALID_ID);
+        return dishService.findById(id);
+    }
+
+    @Override
+    public Page<DishModel> findAllDishesByRestaurantId(Pageable pageable, Long restaurantId, Long categoryId) {
         if (restaurantId == null) throw new ValidationException(INVALID_ID);
         
         Optional<RestaurantModel> restaurant = restaurantService.findById(restaurantId);

@@ -15,5 +15,5 @@ public class RestaurantPageableResponse {
     private List<RestaurantSimpleResponse> content;
     private int page;
     private int size;
-    private long total;
+    private long totalElements;
 }

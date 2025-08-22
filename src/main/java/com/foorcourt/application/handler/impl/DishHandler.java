@@ -41,24 +41,24 @@ public class DishHandler implements IDishHandler {
         DishModel savedModel = dishServicePort.save(model);
         return dishDtoMapper.toResponse(savedModel);
     }
-    
+
     @Override
-    public DishResponse update(DishUpdateRequest request, Long restaurantId, Long categoryId) {
+    public DishResponse update(DishUpdateRequest request) {
         DishModel model = dishDtoMapper.toModelUpdate(request);
-        
-        // Establecer restaurant y category
+
+        /*// Establecer restaurant y category
         RestaurantSimpleModel restaurant = new RestaurantSimpleModel();
         restaurant.setId(restaurantId);
         model.setRestaurant(restaurant);
-        
+
         CategorySimpleModel category = new CategorySimpleModel();
         category.setId(categoryId);
-        model.setCategory(category);
-        
+        model.setCategory(category);*/
+
         DishModel updatedModel = dishServicePort.update(model);
         return dishDtoMapper.toResponse(updatedModel);
     }
-    
+
     @Override
     public DishResponse changeStatusDish(DishChangeStatusRequest request) {
         DishModel model = dishDtoMapper.toModelEnableDisable(request);
@@ -69,7 +69,7 @@ public class DishHandler implements IDishHandler {
     @Override
     @Transactional(readOnly = true)
     public Page<DishSimpleResponse> findAllDishesByRestaurantId(Pageable pageable, Long restaurantId, Long categoryId) {
-        Page<DishModel> models = dishServicePort.findByRestaurantIdAndCategoryId(pageable, restaurantId, categoryId);
+        Page<DishModel> models = dishServicePort.findAllDishesByRestaurantId(pageable, restaurantId, categoryId);
         return models.map(dishDtoMapper::toDishSimpleResponse);
     }
 }

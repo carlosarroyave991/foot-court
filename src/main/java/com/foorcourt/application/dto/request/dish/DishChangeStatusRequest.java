@@ -15,8 +15,8 @@ public class DishChangeStatusRequest {
     @NotNull(message = "The name field cannot be empty.")
     private Long id;
 
-    @NotNull(message = "The userId field cannot be empty.")
-    private Long userId;
+    /*@NotNull(message = "The userId field cannot be empty.")
+    private Long userId;*/
 
     @NotNull(message = "The active field cannot be empty.")
     private Boolean active;

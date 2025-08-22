@@ -50,11 +50,9 @@ public class DishRestController {
     })
     public ResponseEntity<DishResponse> update(
             @PathVariable Long id,
-            @Valid @RequestBody DishUpdateRequest request,
-            @RequestParam Long restaurantId,
-            @RequestParam Long categoryId) {
+            @Valid @RequestBody DishUpdateRequest request){
         request.setId(id);
-        DishResponse response = handler.update(request, restaurantId, categoryId);
+        DishResponse response = handler.update(request);
         return ResponseEntity.ok(response);
     }
     

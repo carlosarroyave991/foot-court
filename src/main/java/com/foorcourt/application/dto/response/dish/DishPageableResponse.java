@@ -15,5 +15,5 @@ public class DishPageableResponse {
     private List<DishSimpleResponse> content;
     private int page;
     private int size;
-    private long total;
+    private long totalElements;
 }

@@ -1,6 +1,7 @@
 package com.foorcourt.domain.usecase;
 
 import com.foorcourt.domain.api.IRestaurantServicePort;
+import com.foorcourt.domain.exception.BusinessException;
 import com.foorcourt.domain.exception.DuplicateResourceException;
 import com.foorcourt.domain.exception.NotFoundException;
 import com.foorcourt.domain.exception.ValidationException;
@@ -48,5 +49,12 @@ public class RestaurantUseCase implements IRestaurantServicePort {
                 Sort.by("name").ascending()
         );
         return restaurantPersistence.findAll(sortedPageable);
+    }
+
+    @Override
+    public Optional<RestaurantModel> findById(Long id) {
+        Optional<RestaurantModel> restaurantModel = restaurantPersistence.findById(id);
+        if (restaurantModel.isEmpty()) throw new BusinessException(ID_NOT_FOUND);
+        return restaurantModel;
     }
 }
