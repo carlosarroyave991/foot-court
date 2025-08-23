@@ -44,6 +44,9 @@ public class OrderHandler implements IOrderHandler {
     @Transactional(readOnly = true)
     public Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable, Long restaurantId) {
         Page<OrderModel> models = orderServicePort.getOrdersByStatus(status, pageable, restaurantId);
+        if (models == null) {
+            throw new RuntimeException("No implementation found for getOrdersByStatus in persistence layer");
+        }
         return models.map(orderDtoMapper::toResponse);
     }
 

@@ -34,6 +34,7 @@ public enum CommonErrorCode  implements ErrorCode{
     CATEGORY_NOT_FOUND("ERR_CATEGORY_NOT_FOUND", "Category not found", HttpStatus.NOT_FOUND.value(), ErrorCategory.RESOURCE),
     USER_ALREADY_EXISTS("ERR_DUPLICATE_USER", "User already exists", HttpStatus.CONFLICT.value(), ErrorCategory.RESOURCE),
     ID_ROLE_NOT_FOUND("ERR_ID_ROLE_NOT_FOUND", "Role id not found", HttpStatus.NOT_FOUND.value(),ErrorCategory.BUSINESS),
+    DISH_DISABLE("ERR_DISH_DISABLE", "Dish is not active", HttpStatus.CONFLICT.value(),ErrorCategory.BUSINESS),
     CLIENT_ALREADY_HAS_AN_ORDER("ERR_CLIENT_ALREADY_HAS_AN_ORDER", "The customer already has an order", HttpStatus.CONFLICT.value(),ErrorCategory.BUSINESS),
     ORDER_MUST_HAVENT_DISH("ERR_ORDER_MUST_HAVENT_DISH", "Order must have at least one dish", HttpStatus.CONFLICT.value(),ErrorCategory.BUSINESS),
     DNI_ALREADY_EXISTS("ERR_DUPLICATE_DNI", "DNI already exists", HttpStatus.CONFLICT.value(), ErrorCategory.RESOURCE),

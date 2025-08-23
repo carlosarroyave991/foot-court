@@ -74,10 +74,8 @@ public class OrderUseCase implements IOrderServicePort {
             Optional<DishModel> dishModel = iDishServicePort.findById(orderDish.getId());
             if (dishModel.isEmpty()) throw new NotFoundException(INVALID_ID);
             if (!dishModel.get().getRestaurant().getId().equals(model.getRestaurant().getId())) throw new ValidationException(RESTAURANT_NOT_FOUND);
-            if (!dishModel.get().getActive()) {
-                throw new ValidationException("Dish with ID " + orderDish.getId() + " is not active");
-            }
-            
+            if (!dishModel.get().getActive()) throw new ValidationException(DISH_DISABLE);
+
             // enriquecer con nombre del plato
             orderDish.setDishName(dishModel.get().getName());
         }
@@ -118,6 +116,17 @@ public class OrderUseCase implements IOrderServicePort {
         if (restaurant.isEmpty()) throw new NotFoundException(RESTAURANT_NOT_FOUND);
 
         // obtener pedidos filtrados por restaurante y estado
-        return iOrderPersistencePort.findOrdersByStatus(status, restaurantId, pageable);
+        Page<OrderModel> orders = iOrderPersistencePort.findOrdersByStatus(status, restaurantId, pageable);
+        
+        // enriquecer cada orden con información de platos
+        return orders.map(order -> {
+            if (order.getOrdersDishes() != null) {
+                for (OrderDishSimpleModel orderDish : order.getOrdersDishes()) {
+                    Optional<DishModel> dishModel = iDishServicePort.findById(orderDish.getId());
+                    dishModel.ifPresent(model -> orderDish.setDishName(model.getName()));
+                }
+            }
+            return order;
+        });
     }
 }
