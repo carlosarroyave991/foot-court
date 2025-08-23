@@ -44,6 +44,11 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         List<OrderEntity> entities = orderRepository.findByClientIdAndStatusIn(clientId, statuses);
         return entities.stream().map(orderEntityMapper::toModel).toList();
     }
+    
+    @Override
+    public void updateOrderAssignment(Long orderId, Long chefId, String status) {
+        orderRepository.updateOrderAssignment(orderId, chefId, status);
+    }
 
     @Override
     public Optional<OrderModel> findById(Long id) {

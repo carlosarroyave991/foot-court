@@ -129,4 +129,21 @@ public class OrderUseCase implements IOrderServicePort {
             return order;
         });
     }
+
+    @Override
+    public OrderModel assignOrderToEmployee(Long orderId, Long employeeId) {
+        // valido la orden
+        OrderModel orderModel = iOrderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(ID_NOT_FOUND));
+
+        // valido el empleado
+        UserModel userModel = Optional.ofNullable(iUserFeignClientPort.getUserById(employeeId))
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        // actualizo solo chefId y status sin tocar las relaciones
+        iOrderPersistencePort.updateOrderAssignment(orderId, employeeId, StatusesOrder.EN_PREPARACION.name());
+        
+        // retorno la orden actualizada
+        return iOrderPersistencePort.findById(orderId).orElse(orderModel);
+    }
 }

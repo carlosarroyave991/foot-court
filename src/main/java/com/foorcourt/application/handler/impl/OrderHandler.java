@@ -49,6 +49,10 @@ public class OrderHandler implements IOrderHandler {
         }
         return models.map(orderDtoMapper::toResponse);
     }
-
-
+    
+    @Override
+    public OrderResponse assignOrderToEmployee(Long orderId, Long employeeId) {
+        OrderModel model = orderServicePort.assignOrderToEmployee(orderId, employeeId);
+        return orderDtoMapper.toResponse(model);
+    }
 }
