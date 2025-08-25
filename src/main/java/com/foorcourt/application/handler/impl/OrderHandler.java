@@ -55,4 +55,10 @@ public class OrderHandler implements IOrderHandler {
         OrderModel model = orderServicePort.assignOrderToEmployee(orderId, employeeId);
         return orderDtoMapper.toResponse(model);
     }
+    
+    @Override
+    public OrderResponse updateOrderStatus(Long orderId, String status) {
+        OrderModel model = orderServicePort.updateOrderStatus(orderId, status);
+        return orderDtoMapper.toResponse(model);
+    }
 }

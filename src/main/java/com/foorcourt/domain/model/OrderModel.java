@@ -22,6 +22,7 @@ public class OrderModel {
     private Long id;
     private LocalDate date;
     private String status;
+    private String securityCode;
     private Long chefId;
     private Long clientId;
     private RestaurantSimpleModel restaurant;

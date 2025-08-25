@@ -14,5 +14,7 @@ public interface IOrderPersistencePort {
     Page<OrderModel> findOrdersByStatus(String status, Long restaurantId ,Pageable pageable);
     Optional<OrderModel> findById(Long id);
     void updateOrderAssignment(Long orderId, Long chefId, String status);
+    void updateOrderStatus(Long orderId, String status);
+    void updateSecurityCode(Long orderId, String securityCode);
     //OrderModel update(OrderModel model);
 }

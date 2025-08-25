@@ -32,9 +32,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/dishes").hasAnyRole("admin", "owner")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/dishes/**").hasAnyRole("admin", "owner")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/dishes/*/status").hasAnyRole("admin", "owner")
-                    .requestMatchers(HttpMethod.POST,"/api/v1/orders").hasAnyRole("client","admin")
-                    .requestMatchers(HttpMethod.GET,"/api/v1/orders/**").hasAnyRole("admin","employee","owner","client")
-                .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.POST,"/api/v1/orders").hasAnyRole("client","admin")
+                .requestMatchers(HttpMethod.PATCH,"/api/v1/orders/*/assign").hasAnyRole("admin","employee","owner")
+                .requestMatchers(HttpMethod.GET,"/api/v1/orders/status/*").hasAnyRole("admin","employee","owner")
+                .requestMatchers(HttpMethod.PATCH,"/api/v1/orders/*/status").hasAnyRole("admin","employee","owner")
+                    .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationWebFilter, UsernamePasswordAuthenticationFilter.class);
         

@@ -67,4 +67,15 @@ public class OrderRestController {
         OrderResponse response = handler.assignOrderToEmployee(orderId, employeeId);
         return ResponseEntity.ok(response);
     }
+    
+    @PatchMapping("/{orderId}/status")
+    @Operation(summary = "Update order status", description = "Updates the status of an order")
+    @ApiResponse(responseCode = "200", description = "Order status updated successfully")
+    @ApiResponse(responseCode = "404", description = "Order not found")
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "New status") @RequestParam String status) {
+        OrderResponse response = handler.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(response);
+    }
 }

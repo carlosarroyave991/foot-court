@@ -25,6 +25,9 @@ public class OrderEntity {
     @Column(nullable = false)
     private String status;
 
+    @Column(name = "security_code")
+    private String securityCode;
+
     @Column(name = "chef_id")
     private Long chefId;
 

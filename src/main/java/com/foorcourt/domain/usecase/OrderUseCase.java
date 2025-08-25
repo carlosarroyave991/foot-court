@@ -9,11 +9,13 @@ import com.foorcourt.domain.exception.ValidationException;
 import com.foorcourt.domain.model.DishModel;
 import com.foorcourt.domain.model.OrderModel;
 import com.foorcourt.domain.model.RestaurantModel;
+import com.foorcourt.domain.model.SmsNotificationModel;
 import com.foorcourt.domain.model.enums.StatusesOrder;
 import com.foorcourt.domain.model.feignclient.UserModel;
 import com.foorcourt.domain.model.simplemodel.OrderDishSimpleModel;
 import com.foorcourt.domain.model.simplemodel.RestaurantSimpleModel;
 import com.foorcourt.domain.spi.IOrderPersistencePort;
+import com.foorcourt.domain.spi.ISmsFeignClientPort;
 import com.foorcourt.domain.spi.IUserFeignClientPort;
 import com.foorcourt.domain.util.OrderStatusValidator;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,11 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.foorcourt.domain.exception.error.CommonErrorCode.*;
+import static com.foorcourt.domain.util.Const.MESSAGE_STATUS_READY;
 
 /**
  * Clase usada para implementar la logica de negocio sobre cada funcion
@@ -37,7 +41,7 @@ public class OrderUseCase implements IOrderServicePort {
     private final IRestaurantServicePort iRestaurantServicePort;
     private final IUserFeignClientPort iUserFeignClientPort;
     private final IOrderPersistencePort iOrderPersistencePort;
-    private final OrderStatusValidator orderStatusValidator;
+    private final ISmsFeignClientPort iSmsFeignClientPort;
 
     @Override
     public OrderModel createOrder(OrderModel model) {
@@ -144,6 +148,43 @@ public class OrderUseCase implements IOrderServicePort {
         iOrderPersistencePort.updateOrderAssignment(orderId, employeeId, StatusesOrder.EN_PREPARACION.name());
         
         // retorno la orden actualizada
+        return iOrderPersistencePort.findById(orderId).orElse(orderModel);
+    }
+
+    @Override
+    public OrderModel updateOrderStatus(Long orderId, String status) {
+        OrderModel orderModel = iOrderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(ID_NOT_FOUND));
+
+        // si el pedido está EN_PREPARACION o LISTO no puede ser cancelado
+        if (status.equals(StatusesOrder.CANCELADO.name()) && 
+            (orderModel.getStatus().equals(StatusesOrder.EN_PREPARACION.name()) || 
+             orderModel.getStatus().equals(StatusesOrder.LISTO.name()))) {
+            throw new BusinessException(INVALID_STATUS);
+        }
+        
+        // actualizar status usando query directa
+        iOrderPersistencePort.updateOrderStatus(orderId, status);
+        
+        if (status.equals(StatusesOrder.LISTO.name())){
+            // generar código aleatorio de 6 dígitos
+            String securityCode = String.format("%06d", new Random().nextInt(1000000));
+            
+            // actualizar código de seguridad usando query directa
+            iOrderPersistencePort.updateSecurityCode(orderId, securityCode);
+            
+            // consultar el numero de telefono del cliente
+            UserModel userModel = iUserFeignClientPort.getUserById(orderModel.getClientId());
+            
+            // enviar notificación SMS
+            SmsNotificationModel smsNotificationModel = new SmsNotificationModel();
+            smsNotificationModel.setPhone(userModel.getPhone());
+            //smsNotificationModel.setRestaurantName(orderModel.getRestaurant().getName());
+            smsNotificationModel.setMessage(orderModel.getRestaurant().getName() + MESSAGE_STATUS_READY + securityCode);
+            iSmsFeignClientPort.sendOrderStatusNotification(smsNotificationModel);
+        }
+        
+        // retornar la orden actualizada
         return iOrderPersistencePort.findById(orderId).orElse(orderModel);
     }
 }

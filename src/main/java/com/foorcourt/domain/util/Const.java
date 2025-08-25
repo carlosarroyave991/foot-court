@@ -12,4 +12,5 @@ public class Const {
     public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     public static final Pattern PATTERN_PHONE = Pattern.compile("^\\+[0-9]{12}$");
     public static final Pattern PATTERN_NIT = Pattern.compile("^[0-9]{1,9}$");
+    public static final String MESSAGE_STATUS_READY = " has your order ready. Security code: ";
 }

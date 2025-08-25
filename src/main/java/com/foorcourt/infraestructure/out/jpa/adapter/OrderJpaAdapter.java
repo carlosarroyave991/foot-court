@@ -49,6 +49,16 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     public void updateOrderAssignment(Long orderId, Long chefId, String status) {
         orderRepository.updateOrderAssignment(orderId, chefId, status);
     }
+    
+    @Override
+    public void updateOrderStatus(Long orderId, String status) {
+        orderRepository.updateStatus(orderId, status);
+    }
+    
+    @Override
+    public void updateSecurityCode(Long orderId, String securityCode) {
+        orderRepository.updateSecurityCode(orderId, securityCode);
+    }
 
     @Override
     public Optional<OrderModel> findById(Long id) {

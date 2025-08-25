@@ -11,4 +11,5 @@ public interface IOrderHandler {
     Page<OrderResponse> getAllOrders(Pageable pageable);
     Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable, Long restaurantId);
     OrderResponse assignOrderToEmployee(Long orderId, Long employeeId);
+    OrderResponse updateOrderStatus(Long orderId, String status);
 }

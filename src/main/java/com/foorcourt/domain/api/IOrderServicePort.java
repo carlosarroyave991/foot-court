@@ -10,4 +10,5 @@ public interface IOrderServicePort {
     Page<OrderModel> getAllOrders(Pageable pageable);
     Page<OrderModel> getOrdersByStatus(String status, Pageable pageable, Long restaurantId);
     OrderModel assignOrderToEmployee(Long orderId, Long employeeId);
+    OrderModel updateOrderStatus(Long orderId, String status);
 }
