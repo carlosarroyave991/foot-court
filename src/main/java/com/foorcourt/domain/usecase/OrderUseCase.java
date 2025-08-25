@@ -156,15 +156,23 @@ public class OrderUseCase implements IOrderServicePort {
         OrderModel orderModel = iOrderPersistencePort.findById(orderId)
                 .orElseThrow(() -> new NotFoundException(ID_NOT_FOUND));
 
-        // si el pedido está EN_PREPARACION o LISTO no puede ser cancelado
-        if (status.equals(StatusesOrder.CANCELADO.name()) && 
-            (orderModel.getStatus().equals(StatusesOrder.EN_PREPARACION.name()) || 
-             orderModel.getStatus().equals(StatusesOrder.LISTO.name()))) {
-            throw new BusinessException(INVALID_STATUS);
+        // pedidos entregados no pueden ser modificados
+        if (orderModel.getStatus().equals(StatusesOrder.ENTREGADO.name())) {
+            throw new BusinessException(ORDER_ALREADY_DELIVERED);
         }
-        
-        // actualizar status usando query directa
-        iOrderPersistencePort.updateOrderStatus(orderId, status);
+
+        // si el pedido está EN_PREPARACION o LISTO no puede ser cancelado
+        if (status.equals(StatusesOrder.CANCELADO.name()) && (orderModel.getStatus().equals(StatusesOrder.EN_PREPARACION.name()) ||
+                orderModel.getStatus().equals(StatusesOrder.LISTO.name())) ||
+                orderModel.getStatus().equals(StatusesOrder.ENTREGADO.name())
+        ) {
+            throw new BusinessException(STATUS_DONT_BE_CANCELED);
+        }
+
+        // solo pedidos LISTO pueden pasar a ENTREGADO (usar deliverOrder para esto)
+        if (status.equals(StatusesOrder.ENTREGADO.name())) {
+            throw new BusinessException(INVALID_STATUS_TRANSITION);
+        }
         
         if (status.equals(StatusesOrder.LISTO.name())){
             // generar código aleatorio de 6 dígitos
@@ -179,11 +187,35 @@ public class OrderUseCase implements IOrderServicePort {
             // enviar notificación SMS
             SmsNotificationModel smsNotificationModel = new SmsNotificationModel();
             smsNotificationModel.setPhone(userModel.getPhone());
-            //smsNotificationModel.setRestaurantName(orderModel.getRestaurant().getName());
             smsNotificationModel.setMessage(orderModel.getRestaurant().getName() + MESSAGE_STATUS_READY + securityCode);
             iSmsFeignClientPort.sendOrderStatusNotification(smsNotificationModel);
         }
-        
+
+        // actualizar status usando query directa
+        iOrderPersistencePort.updateOrderStatus(orderId, status);
+
+        // retornar la orden actualizada
+        return iOrderPersistencePort.findById(orderId).orElse(orderModel);
+    }
+
+    @Override
+    public OrderModel deliverOrder(Long orderId, String securityPin) {
+        OrderModel orderModel = iOrderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(ID_NOT_FOUND));
+
+        // solo pedidos LISTO pueden ser entregados
+        if (!orderModel.getStatus().equals(StatusesOrder.LISTO.name())) {
+            throw new BusinessException(INVALID_STATUS_TRANSITION);
+        }
+
+        // validar PIN de seguridad
+        if (!orderModel.getSecurityCode().equals(securityPin)) {
+            throw new BusinessException(INVALID_SECURITY_PIN);
+        }
+
+        // actualizar a ENTREGADO
+        iOrderPersistencePort.updateOrderStatus(orderId, StatusesOrder.ENTREGADO.name());
+
         // retornar la orden actualizada
         return iOrderPersistencePort.findById(orderId).orElse(orderModel);
     }

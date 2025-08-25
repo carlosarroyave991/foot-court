@@ -72,10 +72,22 @@ public class OrderRestController {
     @Operation(summary = "Update order status", description = "Updates the status of an order")
     @ApiResponse(responseCode = "200", description = "Order status updated successfully")
     @ApiResponse(responseCode = "404", description = "Order not found")
-    public ResponseEntity<OrderResponse> updateOrderStatus(
+    public ResponseEntity<Void> updateOrderStatus(
             @Parameter(description = "Order ID") @PathVariable Long orderId,
             @Parameter(description = "New status") @RequestParam String status) {
         OrderResponse response = handler.updateOrderStatus(orderId, status);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().build();
+    }
+    
+    @PatchMapping("/{orderId}/deliver")
+    @Operation(summary = "Deliver order", description = "Delivers an order with security PIN validation")
+    @ApiResponse(responseCode = "200", description = "Order delivered successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid security PIN or order status")
+    @ApiResponse(responseCode = "404", description = "Order not found")
+    public ResponseEntity<Void> deliverOrder(
+            @Parameter(description = "Order ID") @PathVariable Long orderId,
+            @Parameter(description = "Security PIN") @RequestParam String securityPin) {
+        OrderResponse response = handler.deliverOrder(orderId, securityPin);
+        return ResponseEntity.ok().build();
     }
 }
