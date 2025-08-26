@@ -2,7 +2,10 @@ package com.foorcourt.infraestructure.out.jpa.adapter;
 
 import com.foorcourt.domain.model.OrderModel;
 import com.foorcourt.domain.spi.IOrderPersistencePort;
+import com.foorcourt.infraestructure.out.jpa.entity.DishEntity;
+import com.foorcourt.infraestructure.out.jpa.entity.OrderDishEntity;
 import com.foorcourt.infraestructure.out.jpa.entity.OrderEntity;
+import com.foorcourt.infraestructure.out.jpa.entity.RestaurantEntity;
 import com.foorcourt.infraestructure.out.jpa.mapper.IOrderEntityMapper;
 import com.foorcourt.infraestructure.out.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;

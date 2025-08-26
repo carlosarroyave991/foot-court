@@ -9,16 +9,19 @@ import com.foorcourt.domain.exception.ValidationException;
 import com.foorcourt.domain.model.DishModel;
 import com.foorcourt.domain.model.OrderModel;
 import com.foorcourt.domain.model.RestaurantModel;
-import com.foorcourt.domain.model.SmsNotificationModel;
+import com.foorcourt.domain.model.feignclient.SmsNotificationModel;
 import com.foorcourt.domain.model.enums.StatusesOrder;
+import com.foorcourt.domain.model.feignclient.TraceabilityModel;
 import com.foorcourt.domain.model.feignclient.UserModel;
 import com.foorcourt.domain.model.simplemodel.OrderDishSimpleModel;
 import com.foorcourt.domain.spi.IOrderPersistencePort;
 import com.foorcourt.domain.spi.ISmsFeignClientPort;
+import com.foorcourt.domain.spi.ITraceabilityFeignClientPort;
 import com.foorcourt.domain.spi.IUserFeignClientPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,12 +36,14 @@ import static com.foorcourt.domain.util.Const.MESSAGE_STATUS_READY;
  * Clase usada para implementar la logica de negocio sobre cada funcion
  */
 @RequiredArgsConstructor
+@Transactional
 public class OrderUseCase implements IOrderServicePort {
     private final IDishServicePort iDishServicePort;
     private final IRestaurantServicePort iRestaurantServicePort;
     private final IUserFeignClientPort iUserFeignClientPort;
     private final IOrderPersistencePort iOrderPersistencePort;
     private final ISmsFeignClientPort iSmsFeignClientPort;
+    private final ITraceabilityFeignClientPort iTraceabilityFeignClientPort;
 
     @Override
     public OrderModel createOrder(OrderModel model) {
@@ -90,6 +95,15 @@ public class OrderUseCase implements IOrderServicePort {
         model.getRestaurant().setName(restaurantModel.get().getName());
         
         OrderModel savedOrder = iOrderPersistencePort.save(model);
+        
+        // Llenar datos de la trazabilidad después del save
+        TraceabilityModel traceabilityModel = new TraceabilityModel();
+        traceabilityModel.setOrderId(savedOrder.getId());
+        traceabilityModel.setClientId(savedOrder.getClientId());
+        traceabilityModel.setClientEmail(userModel.get().getEmail());
+        traceabilityModel.setDate(LocalDate.now());
+        traceabilityModel.setNewStatus(savedOrder.getStatus());
+        iTraceabilityFeignClientPort.saveTraceability(traceabilityModel);
 
         savedOrder.setRestaurant(model.getRestaurant());
         savedOrder.setOrdersDishes(model.getOrdersDishes());
@@ -99,11 +113,13 @@ public class OrderUseCase implements IOrderServicePort {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Page<OrderModel> getAllOrders(Pageable pageable) {
         return iOrderPersistencePort.findAllOrders(pageable);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<OrderModel> getOrdersByStatus(String status, Pageable pageable, Long restaurantId) {
         // valido que el status sea válido
         try {
@@ -138,8 +154,12 @@ public class OrderUseCase implements IOrderServicePort {
                 .orElseThrow(() -> new NotFoundException(ID_NOT_FOUND));
 
         // valido el empleado
-        UserModel userModel = Optional.ofNullable(iUserFeignClientPort.getUserById(employeeId))
+        UserModel userEmployee = Optional.ofNullable(iUserFeignClientPort.getUserById(employeeId))
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        // guardar trazabilidad del cambio de status
+        saveTraceability(orderModel, StatusesOrder.EN_PREPARACION.name(), employeeId);
+
 
         // actualizo solo chefId y status sin tocar las relaciones
         iOrderPersistencePort.updateOrderAssignment(orderId, employeeId, StatusesOrder.EN_PREPARACION.name());
@@ -188,6 +208,9 @@ public class OrderUseCase implements IOrderServicePort {
             iSmsFeignClientPort.sendOrderStatusNotification(smsNotificationModel);
         }
 
+        // guardar trazabilidad del cambio de status
+        saveTraceability(orderModel, status, null);
+        
         // actualizar status usando query directa
         iOrderPersistencePort.updateOrderStatus(orderId, status);
 
@@ -210,10 +233,33 @@ public class OrderUseCase implements IOrderServicePort {
             throw new BusinessException(INVALID_SECURITY_PIN);
         }
 
+        // guardar trazabilidad del cambio de status
+        saveTraceability(orderModel, StatusesOrder.ENTREGADO.name(), null);
+        
         // actualizar a ENTREGADO
         iOrderPersistencePort.updateOrderStatus(orderId, StatusesOrder.ENTREGADO.name());
 
         // retornar la orden actualizada
         return iOrderPersistencePort.findById(orderId).orElse(orderModel);
+    }
+    
+    private void saveTraceability(OrderModel orderModel, String newStatus, Long employeeId) {
+        UserModel clientModel = iUserFeignClientPort.getUserById(orderModel.getClientId());
+        
+        TraceabilityModel traceability = new TraceabilityModel();
+        traceability.setOrderId(orderModel.getId());
+        traceability.setClientId(orderModel.getClientId());
+        traceability.setClientEmail(clientModel.getEmail());
+        traceability.setDate(LocalDate.now());
+        traceability.setLastStatus(orderModel.getStatus());
+        traceability.setNewStatus(newStatus);
+        
+        if (employeeId != null) {
+            UserModel employeeModel = iUserFeignClientPort.getUserById(employeeId);
+            traceability.setEmployeeId(employeeId);
+            traceability.setEmployeeEmail(employeeModel.getEmail());
+        }
+        
+        iTraceabilityFeignClientPort.saveTraceability(traceability);
     }
 }

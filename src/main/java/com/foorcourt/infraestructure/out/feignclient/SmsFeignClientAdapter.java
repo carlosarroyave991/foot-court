@@ -1,6 +1,6 @@
 package com.foorcourt.infraestructure.out.feignclient;
 
-import com.foorcourt.domain.model.SmsNotificationModel;
+import com.foorcourt.domain.model.feignclient.SmsNotificationModel;
 import com.foorcourt.domain.spi.ISmsFeignClientPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

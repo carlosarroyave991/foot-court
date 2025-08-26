@@ -5,6 +5,7 @@ import com.foorcourt.domain.api.IOrderServicePort;
 import com.foorcourt.domain.api.IRestaurantServicePort;
 import com.foorcourt.domain.spi.IOrderPersistencePort;
 import com.foorcourt.domain.spi.ISmsFeignClientPort;
+import com.foorcourt.domain.spi.ITraceabilityFeignClientPort;
 import com.foorcourt.domain.spi.IUserFeignClientPort;
 import com.foorcourt.domain.usecase.OrderUseCase;
 import com.foorcourt.infraestructure.out.jpa.adapter.OrderJpaAdapter;
@@ -25,10 +26,11 @@ public class OrderConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort(IDishServicePort dishServicePort,
-                                            IRestaurantServicePort restaurantServicePort,
-                                            IUserFeignClientPort userFeignClientPort,
-                                            IOrderPersistencePort orderPersistencePort,
-                                            ISmsFeignClientPort smsFeignClientPort) {
-        return new OrderUseCase(dishServicePort, restaurantServicePort, userFeignClientPort, orderPersistencePort, smsFeignClientPort);
+                                              IRestaurantServicePort restaurantServicePort,
+                                              IUserFeignClientPort userFeignClientPort,
+                                              IOrderPersistencePort orderPersistencePort,
+                                              ISmsFeignClientPort smsFeignClientPort,
+                                              ITraceabilityFeignClientPort iTraceabilityFeignClientPort) {
+        return new OrderUseCase(dishServicePort, restaurantServicePort, userFeignClientPort, orderPersistencePort, smsFeignClientPort, iTraceabilityFeignClientPort);
     }
 }

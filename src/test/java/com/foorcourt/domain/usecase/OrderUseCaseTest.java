@@ -8,7 +8,7 @@ import com.foorcourt.domain.exception.ValidationException;
 import com.foorcourt.domain.model.DishModel;
 import com.foorcourt.domain.model.OrderModel;
 import com.foorcourt.domain.model.RestaurantModel;
-import com.foorcourt.domain.model.SmsNotificationModel;
+import com.foorcourt.domain.model.feignclient.SmsNotificationModel;
 import com.foorcourt.domain.model.enums.StatusesOrder;
 import com.foorcourt.domain.model.feignclient.UserModel;
 import com.foorcourt.domain.model.simplemodel.OrderDishSimpleModel;

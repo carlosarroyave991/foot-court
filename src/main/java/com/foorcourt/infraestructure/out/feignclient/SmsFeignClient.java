@@ -1,6 +1,6 @@
 package com.foorcourt.infraestructure.out.feignclient;
 
-import com.foorcourt.domain.model.SmsNotificationModel;
+import com.foorcourt.domain.model.feignclient.SmsNotificationModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

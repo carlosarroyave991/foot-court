@@ -61,11 +61,11 @@ public class OrderRestController {
     @Operation(summary = "Assign order to employee", description = "Assigns an order to an employee and changes status")
     @ApiResponse(responseCode = "200", description = "Order assigned successfully")
     @ApiResponse(responseCode = "404", description = "Order or employee not found")
-    public ResponseEntity<OrderResponse> assignOrderToEmployee(
+    public ResponseEntity<Void> assignOrderToEmployee(
             @Parameter(description = "Order ID") @PathVariable Long orderId,
             @Parameter(description = "Employee ID") @RequestParam Long employeeId) {
         OrderResponse response = handler.assignOrderToEmployee(orderId, employeeId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().build();
     }
     
     @PatchMapping("/{orderId}/status")

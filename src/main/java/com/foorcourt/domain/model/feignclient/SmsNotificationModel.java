@@ -1,4 +1,4 @@
-package com.foorcourt.domain.model;
+package com.foorcourt.domain.model.feignclient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
