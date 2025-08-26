@@ -1,7 +1,6 @@
 package com.foorcourt.domain.api;
 
 import com.foorcourt.domain.model.OrderModel;
-import com.foorcourt.domain.model.feignclient.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

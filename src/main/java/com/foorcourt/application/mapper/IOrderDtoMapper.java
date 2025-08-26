@@ -5,9 +5,7 @@ import com.foorcourt.application.dto.request.order.OrderRequest;
 import com.foorcourt.application.dto.response.order.OrderDishResponse;
 import com.foorcourt.application.dto.response.order.OrderResponse;
 import com.foorcourt.domain.model.OrderModel;
-import com.foorcourt.domain.model.RestaurantModel;
 import com.foorcourt.domain.model.simplemodel.OrderDishSimpleModel;
-import com.foorcourt.domain.model.simplemodel.RestaurantSimpleModel;
 import org.mapstruct.*;
 import org.mapstruct.NullValueMappingStrategy;
 

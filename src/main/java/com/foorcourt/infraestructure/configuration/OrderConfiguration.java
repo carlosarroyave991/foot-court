@@ -7,7 +7,6 @@ import com.foorcourt.domain.spi.IOrderPersistencePort;
 import com.foorcourt.domain.spi.ISmsFeignClientPort;
 import com.foorcourt.domain.spi.IUserFeignClientPort;
 import com.foorcourt.domain.usecase.OrderUseCase;
-import com.foorcourt.domain.util.OrderStatusValidator;
 import com.foorcourt.infraestructure.out.jpa.adapter.OrderJpaAdapter;
 import com.foorcourt.infraestructure.out.jpa.mapper.IOrderEntityMapper;
 import com.foorcourt.infraestructure.out.jpa.repository.IOrderRepository;

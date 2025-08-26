@@ -1,13 +1,11 @@
 package com.foorcourt.domain.util;
 
-import com.foorcourt.domain.exception.BusinessException;
 import com.foorcourt.domain.exception.NotFoundException;
 import com.foorcourt.domain.exception.ValidationException;
 import com.foorcourt.domain.model.OrderModel;
 import com.foorcourt.domain.model.enums.StatusesOrder;
 import com.foorcourt.domain.model.feignclient.UserModel;
 import com.foorcourt.domain.spi.IUserFeignClientPort;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component

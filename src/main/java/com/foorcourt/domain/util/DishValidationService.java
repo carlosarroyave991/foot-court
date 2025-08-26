@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
-import static com.foorcourt.domain.util.Const.PATTERN_PHONE;
-
 @Component
 public class DishValidationService {
 

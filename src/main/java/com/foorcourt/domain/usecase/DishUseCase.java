@@ -1,7 +1,6 @@
 package com.foorcourt.domain.usecase;
 
 import com.foorcourt.domain.api.IDishServicePort;
-import com.foorcourt.domain.exception.BusinessException;
 import com.foorcourt.domain.exception.NotFoundException;
 import com.foorcourt.domain.exception.ValidationException;
 import com.foorcourt.domain.model.CategoryModel;

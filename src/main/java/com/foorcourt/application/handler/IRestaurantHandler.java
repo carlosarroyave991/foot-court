@@ -2,7 +2,6 @@ package com.foorcourt.application.handler;
 
 import com.foorcourt.application.dto.request.restaurant.RestaurantRequest;
 import com.foorcourt.application.dto.response.restaurant.RestaurantResponse;
-import com.foorcourt.domain.model.RestaurantModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
